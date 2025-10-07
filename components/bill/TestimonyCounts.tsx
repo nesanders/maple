@@ -63,9 +63,7 @@ export const TestimonyCounts = ({
 
   return (
     <Stack className={`align-self-center mx-auto`}>
-      <CountTotal className={`ms-2`}>
-        {t("counts.total", { count: total })}
-      </CountTotal>
+      <CountTotal className={`ms-2`}>{total} Total Testimonies</CountTotal>
       <CountDirection className={`me-1 ms-4 my-1`}>
         <Col className={`px-2`}>
           <CountCategory>{t("counts.endorsements.title")}</CountCategory>

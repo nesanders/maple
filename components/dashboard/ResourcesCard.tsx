@@ -9,19 +9,19 @@ export function ResourcesCard({}: Props) {
     <Container>
       <Wrapper>
         <LanguagesContainer>
-          <span>{t("languages")}</span>
+          <span>Languages</span>
 
           <Languages>
-            <span>{t("spanish")} </span> | <span> {t("english")}</span>
+            <span>Spanish </span> | <span> English</span>
           </Languages>
         </LanguagesContainer>
 
         <PrivacyContainer>
           <span>
-            <Links href="#">{t("privacyPolicy")}</Links>
+            <Links href="#">Privacy Policy</Links>
           </span>
           <span>
-            <Links href="#">{t("termsAndConditions")} </Links>
+            <Links href="#">Terms and Conditions </Links>
           </span>
         </PrivacyContainer>
         <SocialContainer>

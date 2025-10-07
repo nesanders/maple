@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styled from "styled-components"
 import { isComplete, isCurrent, Step } from "./redux"
 import { chipHeight, StepChip } from "./StepChip"
-import { useTranslation } from "next-i18next"
 
 const Divider = styled.div`
   height: 1px;
@@ -14,7 +13,6 @@ const Divider = styled.div`
 
 export const ProgressBar = styled<{ currentStep: Step }>(
   ({ currentStep, ...rest }) => {
-    const { t } = useTranslation("testimony")
     const renderStep = (idx: number, step: Step, label: string) => (
       <StepBox
         key={step}
@@ -27,11 +25,11 @@ export const ProgressBar = styled<{ currentStep: Step }>(
     )
     return (
       <div {...rest}>
-        {renderStep(1, "position", t("submitTestimonyForm.chooseStance"))}
+        {renderStep(1, "position", "Choose your stance")}
         <Divider />
-        {renderStep(2, "write", t("submitTestimonyForm.write.header"))}
+        {renderStep(2, "write", "Write your testimony")}
         <Divider />
-        {renderStep(3, "publish", t("publish.confirmAndSend"))}
+        {renderStep(3, "publish", "Confirm and Send")}
       </div>
     )
   }

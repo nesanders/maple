@@ -12,15 +12,13 @@ import { SelectRecipients } from "./SelectRecipients"
 import { SendEmailButton } from "./SendEmailButton"
 import { StepHeader } from "./StepHeader"
 import { YourTestimony } from "./TestimonyPreview"
-import { useTranslation } from "next-i18next"
 
 /** Allow sharing a user's published testimony. */
 export const ShareTestimony = styled(({ ...rest }) => {
   useFormRedirection()
-  const { t } = useTranslation("testimony")
   return (
     <div {...rest}>
-      <StepHeader>{t("publish.shareHeader")}</StepHeader>
+      <StepHeader>Share</StepHeader>
       <SelectRecipients className="mt-4" />
       <YourTestimony type="published" className="mt-4" />
       <nav.FormNavigation right={<ShareButtons />} />
@@ -29,13 +27,12 @@ export const ShareTestimony = styled(({ ...rest }) => {
 })``
 
 const EmailHelp = (props: { className?: string }) => {
-  const { t } = useTranslation("testimony")
   return (
     <External
       href="https://www.makeuseof.com/tag/how-to-change-the-default-email-program-for-mailto-links/"
       {...props}
     >
-      {t("publish.emailHelp")}
+      Having trouble opening the email draft?
     </External>
   )
 }
@@ -45,7 +42,6 @@ export const ShareButtons = ({
 }: {
   initialSent?: boolean
 }) => {
-  const { t } = useTranslation("testimony")
   const { share, bill } = usePublishState()
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -81,7 +77,7 @@ export const ShareButtons = ({
         className="form-navigation-btn text-white"
         onClick={redirectToBill}
       >
-        {t("publish.finishedBackToBill")}
+        Finished! Back to Bill
       </Button>
     )
   }
@@ -99,7 +95,6 @@ export function FinishWithoutEmailing({
 }: {
   onConfirm: () => void
 }) {
-  const { t } = useTranslation("testimony")
   const [show, setShow] = useState(false)
   const onHide = () => setShow(false)
   return (
@@ -109,7 +104,7 @@ export function FinishWithoutEmailing({
         className="form-navigation-btn"
         onClick={() => setShow(true)}
       >
-        {t("publish.finishWithoutEmailing")}
+        Finish Without Emailing
       </Button>
       <Modal
         show={show}
@@ -118,19 +113,20 @@ export function FinishWithoutEmailing({
         centered
       >
         <Modal.Header>
-          <Modal.Title id="sign-in-modal">
-            {t("publish.finishWithoutEmailingQuestion")}
-          </Modal.Title>
+          <Modal.Title id="sign-in-modal">Finish Without Emailing?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{t("publish.finishWithoutEmailingBody")}</p>
+          <p>
+            Are you sure you want to finish without emailing your testimony?
+            Engaging with your legislators helps them help you.
+          </p>
         </Modal.Body>
         <Modal.Footer className="p-2">
           <Button variant="outline-danger" onClick={onConfirm}>
-            {t("publish.finishWithoutEmailingConfirm")}
+            Yes, Finish Without Emailing
           </Button>
           <Button variant="secondary" onClick={onHide}>
-            {t("publish.continueSharing")}
+            Continue Sharing
           </Button>
         </Modal.Footer>
       </Modal>

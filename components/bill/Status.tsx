@@ -5,7 +5,6 @@ import { Button, Modal } from "../bootstrap"
 import { StyledBillTitle, StyledModalTitle } from "./HistoryModal"
 import { HistoryTable } from "./HistoryTable"
 import { BillProps } from "./types"
-import { useTranslation } from "next-i18next"
 
 const StyledButton = styled(Button)`
   border-radius: 3rem 0 0 3rem;
@@ -18,7 +17,6 @@ const StyledButton = styled(Button)`
 export const CourtContext = createContext(1)
 
 export const Status = ({ bill }: BillProps) => {
-  const { t } = useTranslation("common")
   const [showBillHistory, setShowBillHistory] = useState(false)
 
   const handleShowBillHistory = () => setShowBillHistory(true)
@@ -38,7 +36,7 @@ export const Status = ({ bill }: BillProps) => {
         </StyledButton>
         <Modal show={showBillHistory} onHide={handleCloseBillHistory} size="lg">
           <Modal.Header closeButton onClick={handleCloseBillHistory}>
-            <StyledModalTitle>{t("bill.status_and_history")}</StyledModalTitle>
+            <StyledModalTitle>Status & History</StyledModalTitle>
           </Modal.Header>
           <StyledBillTitle>
             {bill.id + " - " + bill.content.Title}

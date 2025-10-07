@@ -13,31 +13,19 @@ import {
   AttachmentInfo
 } from "../db"
 import { usePublishState, useTestimonyEmail } from "./hooks"
-import { useTranslation, Trans } from "next-i18next"
 
-export const positionActions = (
-  t: (key: string) => string
-): Record<Position, ReactNode> => ({
+export const positionActions: Record<Position, ReactNode> = {
   neutral: (
-    <Trans i18nKey="testimony:preview.neutral">
-      You are <b className="neutral-position">neutral</b> on this bill
-    </Trans>
+    <span>
+      are <b className="neutral-position">neutral</b> on
+    </span>
   ),
-  endorse: (
-    <Trans i18nKey="testimony:preview.endorse">
-      You <b className="endorse-position">support</b> this bill
-    </Trans>
-  ),
-  oppose: (
-    <Trans i18nKey="testimony:preview.oppose">
-      You <b className="oppose-position">oppose</b> this bill
-    </Trans>
-  )
-})
+  endorse: <b className="endorse-position">support</b>,
+  oppose: <b className="oppose-position">oppose</b>
+}
 
 export const CopyTestimony = styled(props => {
   const email = useTestimonyEmail()
-  const { t } = useTranslation("testimony")
   return (
     <CopyButton
       variant="outline-secondary"
@@ -45,7 +33,7 @@ export const CopyTestimony = styled(props => {
       disabled={!email.body}
       className={clsx("copy-btn", props.className)}
     >
-      <FontAwesomeIcon icon={faCopy} /> {t("preview.copyEmailBody")}
+      <FontAwesomeIcon icon={faCopy} /> Copy Email Body
     </CopyButton>
   )
 })`
@@ -54,11 +42,10 @@ export const CopyTestimony = styled(props => {
 
 export const YourTestimony = styled<{ type: "draft" | "published" }>(
   ({ className, children, type }) => {
-    const { t } = useTranslation("testimony")
     return (
       <div className={className}>
         <div className="d-flex justify-content-between mb-2">
-          <div className="title fs-4">{t("yourTestimony.title")}</div>
+          <div className="title fs-4">Your Testimony</div>
           <CopyTestimony />
         </div>
         <TestimonyPreview type={type} />
@@ -72,7 +59,6 @@ export const YourTestimony = styled<{ type: "draft" | "published" }>(
 export const TestimonyPreview = styled<{ type: "draft" | "published" }>(
   props => {
     const { draft, publication, authorUid } = usePublishState()
-    const { t } = useTranslation("testimony")
     const { position, content, attachmentId } =
       (props.type === "draft" ? draft : publication) ?? {}
 
@@ -90,7 +76,9 @@ export const TestimonyPreview = styled<{ type: "draft" | "published" }>(
     return (
       <div {...props}>
         {position && (
-          <p className="text-center">{positionActions(t)[position]}</p>
+          <p className="text-center">
+            You {positionActions[position]} this bill
+          </p>
         )}
         {content && (
           <div className="content-section">

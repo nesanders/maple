@@ -1,19 +1,17 @@
 import { UseAsyncReturn } from "react-async-hook"
 import styled from "styled-components"
 import { Button, Spinner, Collapse } from "react-bootstrap"
-import { useTranslation } from "next-i18next"
 
 export const ArchiveTestimonyConfirmation = styled<{
   show: boolean
   onHide: () => void
   archiveTestimony: UseAsyncReturn<void, []> | undefined
 }>(({ show, onHide, archiveTestimony, ...props }) => {
-  const { t } = useTranslation("testimony")
   return (
     <Collapse in={show}>
       <div>
         <div {...props}>
-          <div>{t("testimonyItem.deleteTestimonyConfirmation")}</div>
+          <div>Are you sure you want to delete your testimony?</div>
           <div className="d-flex justify-content-center mt-2">
             <Button
               className="choice me-4"
@@ -26,11 +24,11 @@ export const ArchiveTestimonyConfirmation = styled<{
               {archiveTestimony?.loading ? (
                 <Spinner size="sm" animation="border" />
               ) : (
-                t("testimonyItem.yes")
+                "Yes"
               )}
             </Button>
             <Button className="choice" variant="info" onClick={onHide}>
-              {t("testimonyItem.no")}
+              No
             </Button>
           </div>
         </div>

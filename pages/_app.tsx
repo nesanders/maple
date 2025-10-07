@@ -16,7 +16,6 @@ import { Providers } from "../components/providers"
 import { wrapper } from "../components/store"
 import { Provider as Redux } from "react-redux"
 import { appWithTranslation } from "next-i18next"
-import nextI18NextConfig from "../next-i18next.config"
 /**
  * The root React component of the application. Next.js renders this, passing
  * the component of the current page. When you navigate to a new page, Next.js
@@ -42,6 +41,6 @@ function App({ Component, ...rest }: AppPropsWithLayout) {
   )
 }
 
-const WrappedApp = appWithTranslation(App, nextI18NextConfig)
+const WrappedApp = appWithTranslation(App)
 
 export default WrappedApp

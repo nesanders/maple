@@ -1,11 +1,9 @@
 import type { ButtonProps } from "react-bootstrap"
 import { Button } from "../bootstrap"
 import { useTestimonyEmail } from "./hooks"
-import { useTranslation } from "next-i18next"
 
 export const SendEmailButton = (props: ButtonProps) => {
   const { ready, mailToUrl } = useTestimonyEmail()
-  const { t } = useTranslation("testimony")
   return ready ? (
     <Button
       href={mailToUrl}
@@ -14,7 +12,7 @@ export const SendEmailButton = (props: ButtonProps) => {
       variant="secondary"
       {...props}
     >
-      {t("publish.sendEmail")}
+      Send Email
     </Button>
   ) : null
 }

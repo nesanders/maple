@@ -95,10 +95,8 @@ export function ReportModal({
             />
           </FloatingLabel>
           <div className="text-muted">
-            {t("character_count", {
-              count: additionalInformation.length,
-              limit: ADDITIONAL_INFO_MAX_LENGTH_CHARS
-            })}
+            {additionalInformation.length}/{ADDITIONAL_INFO_MAX_LENGTH_CHARS}{" "}
+            characters
           </div>
         </Modal.Body>
         <Modal.Footer>

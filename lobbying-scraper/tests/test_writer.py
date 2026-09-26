@@ -318,3 +318,94 @@ def test_compute_stats_registrant_count_not_deduped_across_different_entities():
 
     stats = doc_mocks[STATS_DOC_ID].set.call_args[0][0]
     assert stats["totalRegistrants"] == 2
+
+
+def _batch_set_dicts_with_key(db: MagicMock, key: str) -> list[dict]:
+    """Every dict passed to batch.set(ref, doc) across all of compute_stats'
+    batched writes (bills, then clients, then firms all share one mocked
+    db.batch() return value) that contains the given key — used to pull out
+    just the client- or firm-summary docs without needing a fully faithful
+    collection/subcollection mock."""
+    return [
+        call[0][1]
+        for call in db.batch.return_value.set.call_args_list
+        if isinstance(call[0][1], dict) and key in call[0][1]
+    ]
+
+
+def test_compute_stats_firm_summary_client_count_deduped_across_periods():
+    """New in this merge: firm_summaries[...]['clientCount'] (labeled
+    "Clients represented" on /lobbying/firms) must count distinct clients,
+    not double-count because the same firm+year now spans two period docs."""
+    db, _ = _make_stats_db()
+    registrants = [
+        _fake_doc({
+            "entityName": "Acme Lobbying",
+            "entityNameNorm": "ACME LOBBYING",
+            "regType": "Employer",
+            "year": 2024,
+            "clients": [
+                {"clientNameNorm": "CLIENT A", "clientName": "Client A", "compensation": 1000.0}
+            ],
+        }),
+        _fake_doc({
+            "entityName": "Acme Lobbying",
+            "entityNameNorm": "ACME LOBBYING",
+            "regType": "Employer",
+            "year": 2024,
+            "clients": [
+                {"clientNameNorm": "CLIENT A", "clientName": "Client A", "compensation": 2000.0}
+            ],
+        }),
+    ]
+
+    def _iter(_db, collection_name):
+        if collection_name == REGISTRANTS_COLLECTION:
+            return iter(registrants)
+        return iter([])
+
+    with patch("writer._iter_collection", side_effect=_iter):
+        compute_stats(db)
+
+    firm_docs = _batch_set_dicts_with_key(db, "clientCount")
+    assert len(firm_docs) == 1
+    assert firm_docs[0]["clientCount"] == 1
+
+
+def test_compute_stats_client_summary_registrant_count_deduped_across_periods():
+    """New in this merge: client_summaries[...]['registrantCount'] (labeled
+    "Lobbyists" on /lobbying/clients) must count distinct firms, not
+    double-count because the same firm+year now spans two period docs."""
+    db, _ = _make_stats_db()
+    registrants = [
+        _fake_doc({
+            "entityName": "Acme Lobbying",
+            "entityNameNorm": "ACME LOBBYING",
+            "regType": "Employer",
+            "year": 2024,
+            "clients": [
+                {"clientNameNorm": "CLIENT A", "clientName": "Client A", "compensation": 1000.0}
+            ],
+        }),
+        _fake_doc({
+            "entityName": "Acme Lobbying",
+            "entityNameNorm": "ACME LOBBYING",
+            "regType": "Employer",
+            "year": 2024,
+            "clients": [
+                {"clientNameNorm": "CLIENT A", "clientName": "Client A", "compensation": 2000.0}
+            ],
+        }),
+    ]
+
+    def _iter(_db, collection_name):
+        if collection_name == REGISTRANTS_COLLECTION:
+            return iter(registrants)
+        return iter([])
+
+    with patch("writer._iter_collection", side_effect=_iter):
+        compute_stats(db)
+
+    client_docs = _batch_set_dicts_with_key(db, "registrantCount")
+    assert len(client_docs) == 1
+    assert client_docs[0]["registrantCount"] == 1
